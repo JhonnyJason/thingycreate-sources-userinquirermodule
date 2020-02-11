@@ -59,14 +59,15 @@ yesNoPrompt = (message, defaultValue) ->
         }
     ]
 
-nextActionPrompt = (actionChoices) ->
+nextActionPrompt = (actionChoices, message) ->
     actionChoices = actionChoices.map(addSeparators)
     actionChoices.unshift(new inquirer.Separator())
+    if !message then message = "Select an action >"
     return [
         {
             name: "nextAction"
             type: "list"
-            message: "Select a userConfigAction >"
+            message: message
             choices: actionChoices
             default: actionChoices[0]
         }
@@ -130,12 +131,13 @@ cloudServicePrompt = ->
         }
     ]
 
-multipleSelectionPrompt = (choices) -> 
+multipleSelectionPrompt = (choices, message) ->
+    if !message then message = "Select your Selection >"
     return [
         {
             name: "selection",
             type: "checkbox",
-            message: "Select your Selection >",
+            message: message,
             choices: choices
         }
     ]
@@ -221,9 +223,9 @@ userinquirermodule.inquireSelectFrom = (options) ->
     answer = await inquirer.prompt(question)
     return answer.selection
 
-userinquirermodule.inquireNextAction = (actions) ->
+userinquirermodule.inquireNextAction = (actions, message) ->
     log "userinquirermodule.inquireNextAction"
-    prompt = nextActionPrompt(actions)
+    prompt = nextActionPrompt(actions, message)
     answer = await inquirer.prompt(prompt)
     return answer.nextAction
 
@@ -245,9 +247,9 @@ userinquirermodule.inquireThingyRecipeSelect = ->
     answer = await inquirer.prompt(prompt)
     return answer.selectedThingyRecipe
 
-userinquirermodule.inquireSelectionSet = (choices) ->
+userinquirermodule.inquireSelectionSet = (choices, message) ->
     log "userinquirermodule.inquireSelectionSet"
-    prompt = multipleSelectionPrompt(choices)
+    prompt = multipleSelectionPrompt(choices, message)
     answer = await inquirer.prompt(prompt)
     return answer.selection
 
